@@ -21,7 +21,8 @@
 		<h4>No tasks! Click the link below to add some new ones!</h4>
 	</th:block>
 	<div>
-		<div th:each="task : ${tasks}">
+		<div th:each="task, taskStatus : ${tasks}">
+			<h4 th:text="|Task #${taskStatus.count}|"></h4>
 			<p>Description: <span th:text="${task.description}"></span></p>
 			<p>Due Date: <span th:text="${task.dueDate}"></span></p>
 			<p>Complete? <span th:text="${task.isComplete ? 'Yes' : 'No'}"></span></p>
@@ -31,7 +32,6 @@
 			<form method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
 				<button type="submit">Delete Task</button>
 			</form>
-			<br/>
 		</div>
 	</div>
 	<p><a th:href="@{/tasks/add}">Add a Task</a></p>
