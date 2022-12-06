@@ -3,21 +3,22 @@
 <head>
 <title>View All Tasks</title>
 <style>
-	form {
+	.filter-functions {
+		margin-top: 5px;
+	}
+	.task-functions {
 		display: inline-block;
-		margin-right: "15px";
+		margin-right: 15px;
 	}
 </style>
 <script>
-	function filterByDescription(event) {
-		const inputValue = event.target.value;
-		const tasks = document.getElementsByClassName("tasks");
-		const filteredTasks = Array.from(tasks).filter(task => {
-			return task.innerHTML.includes("Description: <span>" + inputValue);
-		});
-		const allHtml = filteredTasks.map(task => task.innerHTML);
-		document.getElementById("tasks-container").innerHTML = allHtml;
-		console.log(filteredTasks);
+	function validateCompletionStatus(event) {
+		const filterByCompletionStatusButton = document.getElementById("submit-filter-by-completion-status");
+		filterByCompletionStatusButton.disabled = true;
+		const enteredCompletionStatus = event.target.value.toLowerCase();
+		if (enteredCompletionStatus === "yes" || enteredCompletionStatus === "no") {
+			filterByCompletionStatusButton.disabled = false;
+		}
 	}
 </script>
 </head>
@@ -33,8 +34,28 @@
 		<h4>No tasks! Click the link below to add some new ones!</h4>
 	</th:block>
 	<th:block th:unless="${tasks.isEmpty()}">
-		<label for="filter-by-description">Search by Description:</label>
-		<input oninput="filterByDescription(event)" type="text" />
+		<form class="filter-functions" th:action="@{/tasks/filter-by-description}">
+			<div>
+				<label for="filter-by-description">Filter by Description:</label>
+				<input id="description" type="text" name="description" required />
+				<button type="submit">Filter</button>
+			</div>
+		</form>
+		<form class="filter-functions" th:action="@{/tasks/filter-by-due-date}">
+			<div>
+				<label for="filter-by-due-date">Filter by Due Date:</label>
+				<input id="due-date" type="text" name="due-date" required />
+				<button type="submit">Filter</button>
+			</div>
+		</form>
+		<p><i>Please enter in either 'yes' or 'no'</i></p>
+		<form class="filter-functions" th:action="@{/tasks/filter-by-completion-status}">
+			<div>
+				<label for="filter-by-completion-status">Filter by Completion Status:</label>
+				<input id="completion-status" type="text" name="completion-status" oninput="validateCompletionStatus(event)"required />
+				<button id="submit-filter-by-completion-status" type="submit">Filter</button>
+			</div>
+		</form>
 	</th:block>
 	<div>
 		<div id="tasks-container">
@@ -44,10 +65,10 @@
 					<p>Description: <span th:text="${task.description}"></span></p>
 					<p>Due Date: <span th:text="${task.dueDate}"></span></p>
 					<p>Complete? <span th:text="${task.isComplete ? 'Yes' : 'No'}"></span></p>
-					<form method="post" th:action="@{/tasks/{id}/complete(id=${task.id})}">
+					<form class="task-functions" method="post" th:action="@{/tasks/{id}/complete(id=${task.id})}">
 						<button type="submit">Complete Task</button>
 					</form>
-					<form method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
+					<form class="task-functions" method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
 						<button type="submit">Delete Task</button>
 					</form>
 				</div>
@@ -55,5 +76,8 @@
 		</div>
 	</div>
 	<p><a th:href="@{/tasks/add}">Add a Task</a></p>
+	<th:block th:if='${#httpServletRequest.requestURI.contains("/filter-by-")}'>
+		<p><a th:href="@{/tasks/view-all}">Clear Filter(s)</a></p>
+	</th:block>
 </body>
 </html>

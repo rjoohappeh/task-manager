@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -38,7 +39,6 @@ public class TaskController {
 	public String viewAllTasks(Model model) {
 		List<Task> tasks = taskRepository.findAll();
 		model.addAttribute("tasks", tasks);
-		tasks.forEach(System.out::println);
 		return "allTasks";
 	}
 	
@@ -55,5 +55,27 @@ public class TaskController {
 		taskRepository.deleteById(id);
 		redirectAttributes.addFlashAttribute("deleteSuccessful", "Task deleted successfully");
 		return "redirect:/tasks/view-all";
+	}
+	
+	@GetMapping("/filter-by-description")
+	public String filterByDescription(Model model, @RequestParam("description") String description) {
+		List<Task> filteredTasks = taskRepository.findAllByDescription(description);
+		model.addAttribute("tasks", filteredTasks);
+		return "allTasks";
+	}
+	
+	@GetMapping("/filter-by-due-date")
+	public String filterByDueDate(Model model, @RequestParam("due-date") String dueDate) {
+		List<Task> filteredTasks = taskRepository.findAllByDueDate(dueDate);
+		model.addAttribute("tasks", filteredTasks);
+		return "allTasks";
+	}
+	
+	@GetMapping("/filter-by-completion-status")
+	public String filterByCompletionStatus(Model model, @RequestParam("completion-status") String completionStatus) {
+		boolean isComplete = completionStatus.equalsIgnoreCase("yes") ? true : false;
+		List<Task> filteredTasks = taskRepository.findAllByIsComplete(isComplete);
+		model.addAttribute("tasks", filteredTasks);
+		return "allTasks";
 	}
 }
