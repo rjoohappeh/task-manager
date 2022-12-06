@@ -78,4 +78,19 @@ public class TaskController {
 		model.addAttribute("tasks", filteredTasks);
 		return "allTasks";
 	}
+	
+	@GetMapping("/sort-by-due-date")
+	public String sortByDueDate(Model model) {
+		List<Task> sortedTasks = taskRepository.findByOrderByDueDateDesc();
+		model.addAttribute("tasks", sortedTasks);
+		return "allTasks";
+	}
+	
+	@GetMapping("/sort-by-completion-status")
+	public String sortByCompletionStatus(Model model) {
+		List<Task> sortedTasks = taskRepository.findByOrderByIsCompleteDesc();
+		model.addAttribute("tasks", sortedTasks);
+		return "allTasks";
+	}
+	
 }

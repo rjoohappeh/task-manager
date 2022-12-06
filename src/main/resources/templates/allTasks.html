@@ -3,10 +3,10 @@
 <head>
 <title>View All Tasks</title>
 <style>
-	.filter-functions {
+	.top-margin {
 		margin-top: 5px;
 	}
-	.task-functions {
+	.inline-forms {
 		display: inline-block;
 		margin-right: 15px;
 	}
@@ -34,14 +34,14 @@
 		<h4>No tasks! Click the link below to add some new ones!</h4>
 	</th:block>
 	<th:block th:unless="${tasks.isEmpty()}">
-		<form class="filter-functions" th:action="@{/tasks/filter-by-description}">
+		<form class="top-margin" th:action="@{/tasks/filter-by-description}">
 			<div>
 				<label for="filter-by-description">Filter by Description:</label>
 				<input id="description" type="text" name="description" required />
 				<button type="submit">Filter</button>
 			</div>
 		</form>
-		<form class="filter-functions" th:action="@{/tasks/filter-by-due-date}">
+		<form class="top-margin" th:action="@{/tasks/filter-by-due-date}">
 			<div>
 				<label for="filter-by-due-date">Filter by Due Date:</label>
 				<input id="due-date" type="text" name="due-date" required />
@@ -49,12 +49,18 @@
 			</div>
 		</form>
 		<p><i>Please enter in either 'yes' or 'no'</i></p>
-		<form class="filter-functions" th:action="@{/tasks/filter-by-completion-status}">
+		<form class="top-margin" th:action="@{/tasks/filter-by-completion-status}">
 			<div>
 				<label for="filter-by-completion-status">Filter by Completion Status:</label>
 				<input id="completion-status" type="text" name="completion-status" oninput="validateCompletionStatus(event)"required />
 				<button id="submit-filter-by-completion-status" type="submit">Filter</button>
 			</div>
+		</form>
+		<form class="inline-forms top-margin" th:action="@{/tasks/sort-by-due-date}">
+			<button type="submit">Sort by due date</button>
+		</form>
+		<form class="inline-forms top-margin" th:action="@{/tasks/sort-by-completion-status}">
+			<button type="submit">Sort by completion status</button>
 		</form>
 	</th:block>
 	<div>
@@ -65,10 +71,10 @@
 					<p>Description: <span th:text="${task.description}"></span></p>
 					<p>Due Date: <span th:text="${task.dueDate}"></span></p>
 					<p>Complete? <span th:text="${task.isComplete ? 'Yes' : 'No'}"></span></p>
-					<form class="task-functions" method="post" th:action="@{/tasks/{id}/complete(id=${task.id})}">
+					<form class="inline-forms" method="post" th:action="@{/tasks/{id}/complete(id=${task.id})}">
 						<button type="submit">Complete Task</button>
 					</form>
-					<form class="task-functions" method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
+					<form class="inline-forms" method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
 						<button type="submit">Delete Task</button>
 					</form>
 				</div>
@@ -78,6 +84,9 @@
 	<p><a th:href="@{/tasks/add}">Add a Task</a></p>
 	<th:block th:if='${#httpServletRequest.requestURI.contains("/filter-by-")}'>
 		<p><a th:href="@{/tasks/view-all}">Clear Filter(s)</a></p>
+	</th:block>
+	<th:block th:if='${#httpServletRequest.requestURI.contains("/sort-by")}'>
+		<p><a th:href="@{/tasks/view-all}">Clear Sort(s)</a></p>
 	</th:block>
 </body>
 </html>

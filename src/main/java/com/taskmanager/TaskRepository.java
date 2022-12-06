@@ -21,4 +21,8 @@ public interface TaskRepository extends JpaRepository<Task, Integer>{
 	List<Task> findAllByDueDate(String dueDate);
 	
 	List<Task> findAllByIsComplete(boolean isComplete);
+	
+	List<Task> findByOrderByDueDateDesc();
+	
+	List<Task> findByOrderByIsCompleteDesc();
 }
