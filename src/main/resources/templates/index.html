@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<title>Task Manager</title>
+</head>
+<body>
+	<h2>Welcome to the Task Manager</h2>
+	<h4>Click a link below to use the app!</h4>
+	<div>
+		<p><a th:href="@{/tasks/add}">Add a Task</a></p>
+		<p><a th:href="@{/tasks/view-all}">View all Tasks</a></p>
+	</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<title>Add Task</title>
+</head>
+<body>
+	<h3>Add a new Task</h3>
+	<form method="post" th:action="@{/tasks/add}" th:object="${task}">
+		<div>
+			<label for="task-description">Description:</label>
+			<input type="text" minlength="1" th:field="*{description}" required />
+		</div>
+		<div>
+			<label for="task-due-date">Due Date:</label>
+			<input type="date" th:field="*{dueDate}" required />
+		</div>
+		<button type="submit">Add Task</button>
+	</form>
+	<th:block th:if="${addTaskSuccessful}">
+		<p th:text="${addTaskSuccessful}"/>
+	</th:block>
+	<div>
+		<a th:href="@{/tasks/view-all}">View All Tasks</a>
+	</div>
+</body>
+</html>

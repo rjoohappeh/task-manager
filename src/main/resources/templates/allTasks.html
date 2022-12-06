@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<title>View All Tasks</title>
+<style>
+	form {
+		display: inline-block;
+		margin-right: "15px";
+	}
+</style>
+</head>
+<body>
+	<h3>All Tasks</h3>
+	<th:block th:if="${updateSuccessful}">
+		<h4 th:text="${updateSuccessful}"></h4>
+	</th:block>
+	<th:block th:if="${deleteSuccessful}">
+		<h4 th:text="${deleteSuccessful}"></h4>
+	</th:block>
+	<th:block th:if="${tasks.isEmpty()}">
+		<h4>No tasks! Click the link below to add some new ones!</h4>
+	</th:block>
+	<div>
+		<div th:each="task : ${tasks}">
+			<p>Description: <span th:text="${task.description}"></span></p>
+			<p>Due Date: <span th:text="${task.dueDate}"></span></p>
+			<p>Complete? <span th:text="${task.isComplete ? 'Yes' : 'No'}"></span></p>
+			<form method="post" th:action="@{/tasks/{id}/complete(id=${task.id})}">
+				<button type="submit">Complete Task</button>
+			</form>
+			<form method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
+				<button type="submit">Delete Task</button>
+			</form>
+			<br/>
+		</div>
+	</div>
+	<p><a th:href="@{/tasks/add}">Add a Task</a></p>
+</body>
+</html>
