@@ -8,6 +8,18 @@
 		margin-right: "15px";
 	}
 </style>
+<script>
+	function filterByDescription(event) {
+		const inputValue = event.target.value;
+		const tasks = document.getElementsByClassName("tasks");
+		const filteredTasks = Array.from(tasks).filter(task => {
+			return task.innerHTML.includes("Description: <span>" + inputValue);
+		});
+		const allHtml = filteredTasks.map(task => task.innerHTML);
+		document.getElementById("tasks-container").innerHTML = allHtml;
+		console.log(filteredTasks);
+	}
+</script>
 </head>
 <body>
 	<h3>All Tasks</h3>
@@ -20,18 +32,26 @@
 	<th:block th:if="${tasks.isEmpty()}">
 		<h4>No tasks! Click the link below to add some new ones!</h4>
 	</th:block>
+	<th:block th:unless="${tasks.isEmpty()}">
+		<label for="filter-by-description">Search by Description:</label>
+		<input oninput="filterByDescription(event)" type="text" />
+	</th:block>
 	<div>
-		<div th:each="task, taskStatus : ${tasks}">
-			<h4 th:text="|Task #${taskStatus.count}|"></h4>
-			<p>Description: <span th:text="${task.description}"></span></p>
-			<p>Due Date: <span th:text="${task.dueDate}"></span></p>
-			<p>Complete? <span th:text="${task.isComplete ? 'Yes' : 'No'}"></span></p>
-			<form method="post" th:action="@{/tasks/{id}/complete(id=${task.id})}">
-				<button type="submit">Complete Task</button>
-			</form>
-			<form method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
-				<button type="submit">Delete Task</button>
-			</form>
+		<div id="tasks-container">
+			<div th:each="task, taskStatus : ${tasks}">
+				<div class="tasks">
+					<h4 th:text="|Task #${taskStatus.count}|"></h4>
+					<p>Description: <span th:text="${task.description}"></span></p>
+					<p>Due Date: <span th:text="${task.dueDate}"></span></p>
+					<p>Complete? <span th:text="${task.isComplete ? 'Yes' : 'No'}"></span></p>
+					<form method="post" th:action="@{/tasks/{id}/complete(id=${task.id})}">
+						<button type="submit">Complete Task</button>
+					</form>
+					<form method="post" th:action="@{/tasks/{id}/delete(id=${task.id})}">
+						<button type="submit">Delete Task</button>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 	<p><a th:href="@{/tasks/add}">Add a Task</a></p>
